@@ -23,7 +23,9 @@
 language: cpp
 os: linux
 dist: focal
-compiler: gcc
+compiler:
+  - gcc
+  - clang
 
 addons:
   apt:
