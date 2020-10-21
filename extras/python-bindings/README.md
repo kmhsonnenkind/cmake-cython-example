@@ -19,7 +19,7 @@ print(f"The foo's baz is {instance.baz}")
 
 ## Build and Installation
 
-The build uses [cython](https://cython.org) along with [setuptools](https://setuptools.readthedocs.io/en/latest) and requires `Python >= 3.7`.
+The build uses [cython](https://cython.org) along with [setuptools](https://setuptools.readthedocs.io/en/latest) and requires `Python >= 3.6`.
 
 It expects the [foo C API](https://github.com/kmhsonnenkind/cmake-cython-example) to be installed and findable by the `Python` interpreter.
 

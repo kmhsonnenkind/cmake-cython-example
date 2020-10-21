@@ -110,5 +110,5 @@ This will install:
 * The native `foo` library (to somewhere like */usr/local/lib/*)
 * The required headers for the `foo` library (to somewhere like */usr/local/include/*)
 * The cmake files for `find_package` (to somewhere like */usr/local/share/cmake/*)
-* The Python `foo` package (to somewhere like */usr/local/lib/python3.7/dist-packages/*)
+* The Python `foo` package (to somewhere like */usr/local/lib/python3.6/dist-packages/*)
 * If enabled both the native documentation as well as the Python documentation (to somewhere like */usr/local/share/doc/*)
