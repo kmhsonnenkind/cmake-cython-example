@@ -5,7 +5,7 @@
    :maxdepth: 2
    :caption: Contents:
 
-This library offers `Python 3 <https://www.python.org>`_ bindings for the `foo C API <https://github.com/kmhsonnenkind/foo>`_.
+This library offers `Python 3 <https://www.python.org>`_ bindings for the `foo C API <https://github.com/kmhsonnenkind/cmake-cython-example>`_.
 
 Example
 =======

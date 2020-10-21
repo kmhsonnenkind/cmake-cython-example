@@ -83,7 +83,7 @@ To use the native library as a git submodule simply clone it somewhere in your s
 
 ```sh
 git submodule init
-git submodule add https://github.com/kmhsonnenkind/foo.git external/foo
+git submodule add https://github.com/kmhsonnenkind/cmake-cython-example.git external/foo
 ```
 
 In the *CMakeLists.txt* file you can then do something like:

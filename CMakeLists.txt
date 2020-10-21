@@ -29,7 +29,7 @@ cmake_minimum_required(VERSION 3.12)
 project(foo
   VERSION 0.0.1
   DESCRIPTION "Library for foob'ing the Foo's baz"
-  HOMEPAGE_URL "https://github.com/kmhsonnenkind/foo"
+  HOMEPAGE_URL "https://github.com/kmhsonnenkind/cmake-cython-example"
   LANGUAGES C CXX)
 
 # Build options

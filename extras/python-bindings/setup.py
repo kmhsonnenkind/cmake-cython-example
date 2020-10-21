@@ -59,7 +59,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     author='Martin Kloesch',
     author_email='martin.kloesch@gmail.com',
-    url='https://github.com/kmhsonnenkind/foo/extras/python-bindings',
+    url='https://github.com/kmhsonnenkind/cmake-cython-example/extras/python-bindings',
     packages=['foo'],
     ext_modules=cythonize(
         foo_extension,
