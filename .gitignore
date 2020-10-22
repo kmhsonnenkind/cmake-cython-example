@@ -1,12 +1,62 @@
-[Bb]uild
-CMakeLists.txt.user
+# CMake files from: https://github.com/github/gitignore/blob/2c52d023ddb520962d1aa81ab030ee5172261eb2/CMake.gitignore
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
-Testing
 Makefile
 cmake_install.cmake
 install_manifest.txt
-compile_commands.json
 CTestTestfile.cmake
+
+# C files from: https://github.com/github/gitignore/blob/2c52d023ddb520962d1aa81ab030ee5172261eb2/C.gitignore
+*.d
+*.o
+*.ko
+*.obj
+*.elf
+*.gch
+*.pch
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# C++ files from: https://github.com/github/gitignore/blob/2c52d023ddb520962d1aa81ab030ee5172261eb2/C%2B%2B.gitignore
+# Duplicate entries with C section above removed
+*.mod
+*.smod
+*.lai
+*.exe
+*.out
+*.app
+
+# Additional CMake output files
+[Bb]uild
+*.user
+Testing
+compile_commands.json
 _deps
+*.ninja
+.ninja_deps
+.ninja_log
+*.sln
+*.vcxproj
+*.vcxproj.filters
+Debug
+Release
+CMakeDoxyfile.in
+CMakeDoxygenDefaults.cmake
+DartConfiguration.tcl
+
+# Output from this library
+foo-tests
+foo-config-version.cmake
+foo-config.cmake
+foo-targets.cmake
+Doxyfile
+docs/html
+docs/*.tag
+*.stamp
