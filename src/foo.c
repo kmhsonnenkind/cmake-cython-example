@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Martin Kloesch
+ * Copyright (c) 2021 Martin Kloesch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@
  *
  * \param[in] self Foo object to be initialized.
  * \param[in] baz Initial value for Foo's baz.
- * \returns int \c 0 if successful.
+ * \return int \c 0 if successful.
  * \retval 0 success.
  * \retval EINVAL if \p self is \c NULL or \p baz is negative.
  * \retval ENOMEM if not enough memory available.

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2020 Martin Kloesch
+# Copyright (c) 2021 Martin Kloesch
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ cdef class Foo:
         '''
         Foob's the Foo's baz by calling native function.
 
-        :raise OverflowError: If foob'ing the would overflow the baz.
+        :raise OverflowError: If foob'ing would overflow the baz.
         '''
         cdef int result = c_foo.foo_foob(&self._native)
 

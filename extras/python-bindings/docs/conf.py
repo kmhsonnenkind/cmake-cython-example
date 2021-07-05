@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(_this_dir, '..', 'build', f'lib.{distutils.util.
 # -- Project information -----------------------------------------------------
 
 project = 'foo'
-copyright = '2020, Martin Kloesch'
+copyright = '2021, Martin Kloesch'
 author = 'Martin Kloesch <martin.kloesch@gmail.com'
 
 # The full version, including alpha/beta/rc tags
