@@ -96,11 +96,6 @@ USE_MDFILE_AS_MAINPAGE = "@CMAKE_CURRENT_SOURCE_DIR@/README.md"
 # The default value is: YES.
 GENERATE_LATEX         = NO
 
-# When a file name is specified after GENERATE_TAGFILE, doxygen will create a
-# tag file that is based on the input files it reads. See section "Linking to
-# external documentation" for more information about the usage of tag files.
-GENERATE_TAGFILE       = "@DOXYGEN_OUTPUT_DIR@/@PROJECT_NAME@.tag"
-
 # If you set the HAVE_DOT tag to YES then doxygen will assume the dot tool is
 # available from the path. This tool is part of Graphviz (see:
 # http://www.graphviz.org/), a graph visualization toolkit from AT&T and Lucent
