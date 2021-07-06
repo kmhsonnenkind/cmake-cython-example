@@ -38,6 +38,6 @@ addons:
       - python3-sphinx
 
 script:
-  - cmake -DBUILD_DOCUMENTATION=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.8 .
+  - cmake -DBUILD_DOCUMENTATION=ON -DBUILD_PYTHON_BINDINGS=ON -DBUILD_TESTING=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.8 .
   - cmake --build .
   - ctest .

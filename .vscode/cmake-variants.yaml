@@ -1,0 +1,54 @@
+buildType:
+    default: debug
+    description: Build type
+    choices:
+        debug:
+            short: Debug
+            long: Build with debug information and optimization disabled
+            buildType: Debug
+        release:
+            short: Release
+            long: Build without debug information and optimization enabled
+            buildType: Release
+
+python:
+  default: python
+  choices:
+    python:
+      short: w/ python
+      long: Build Python bindings using cython
+      settings:
+        BUILD_PYTHON_BINDINGS: ON
+    no-python:
+      short: wo/ python
+      long: Do not build Python bindings using cython
+      settings:
+        BUILD_PYTHON_BINDINGS: OFF
+
+tests:
+  default: tests
+  choices:
+    tests:
+      short: w/ tests
+      long: Build unittests using catch2 (and optionally pytest)
+      settings:
+        BUILD_TESTING: ON
+    no-tests:
+      short: wo/ tests
+      long: Do not build unittests
+      settings:
+        BUILD_TESTING: OFF
+
+documentation:
+  default: no-documentation
+  choices:
+    documentation:
+      short: w/ documentation
+      long: Build API documentation using doxygen (and optionally sphinx)
+      settings:
+        BUILD_DOCUMENTATION: ON
+    no-documentation:
+      short: wo/ documentation
+      long: Do not build API documentation
+      settings:
+        BUILD_DOCUMENTATION: OFF
