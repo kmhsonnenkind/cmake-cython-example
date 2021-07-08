@@ -1,8 +1,8 @@
 # Example: Building C library with Cython Wrapper using CMake
 
-![GitHub](https://img.shields.io/github/license/kmhsonnenkind/cmake-cython-example)
-![Travis (.com)](https://img.shields.io/travis/com/kmhsonnenkind/cmake-cython-example)
-![Codecov](https://img.shields.io/codecov/c/gh/kmhsonnenkind/cmake-cython-example)
+[![GitHub](https://img.shields.io/github/license/kmhsonnenkind/cmake-cython-example)](https://github.com/kmhsonnenkind/cmake-cython-example/blob/main/LICENSE)
+[![Travis (.com)](https://app.travis-ci.com/kmhsonnenkind/cmake-cython-example.svg?branch=main)](https://app.travis-ci.com/kmhsonnenkind/cmake-cython-example)
+[![Codecov](https://codecov.io/gh/kmhsonnenkind/cmake-cython-example/branch/main/graph/badge.svg?token=5LNZWPDGI2)](https://codecov.io/gh/kmhsonnenkind/cmake-cython-example)
 
 ## About
 
