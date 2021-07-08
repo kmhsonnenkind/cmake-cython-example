@@ -35,10 +35,19 @@ project(foo
 # Build options
 option(BUILD_PYTHON_BINDINGS "Build Python bindings using cython" ON)
 option(BUILD_DOCUMENTATION "Build API documentation using doxygen (and optionally sphinx)" OFF)
+include(CMakeDependentOption)
+CMAKE_DEPENDENT_OPTION(CODE_COVERAGE "Measure code coverage information" OFF "BUILD_TESTING" OFF)
 
 # Compiler settings
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
+
+# Internal variables
+if(BUILD_TESTING AND CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  set(_CODE_COVERAGE 1)
+else()
+  set(_CODE_COVERAGE 0)
+endif()
 
 
 ################################################################################
@@ -47,13 +56,28 @@ set(CMAKE_CXX_STANDARD 11)
 # Main C library
 add_library(foo include/foo.h src/foo.c)
 add_library(kmhsonnenkind::foo ALIAS foo)
-target_include_directories(${PROJECT_NAME}
+target_include_directories(foo
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
+# Special version of C library for measuring code coverage
+if(_CODE_COVERAGE)
+  add_library(foo-coverage include/foo.h src/foo.c)
+  target_include_directories(foo-coverage
+    PUBLIC
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>)
+  target_compile_options(foo-coverage PUBLIC -O0 -g --coverage -fPIC)
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+    target_link_options(foo-coverage PUBLIC --coverage)
+  else()
+    target_link_libraries(foo-coverage PUBLIC --coverage)
+  endif()
+endif()
+
 # Python bindings
-if (BUILD_PYTHON_BINDINGS)
+if(BUILD_PYTHON_BINDINGS)
   find_package(PythonInterp 3.6 REQUIRED)
   find_package(PythonLibs 3.6 REQUIRED)
 
@@ -72,9 +96,7 @@ build_dir=${CMAKE_CURRENT_BINARY_DIR}/docs/python
 
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/python.stamp
-    COMMAND ${PYTHON_EXECUTABLE}
-      setup.py
-        bdist_egg
+    COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext
     COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/python.stamp
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
     DEPENDS
@@ -95,15 +117,19 @@ endif()
 # Tests
 ################################################################################
 include(CTest)
-if (BUILD_TESTING)
+if(BUILD_TESTING)
   # Catch2 tests for native C library
   add_executable(foo-tests tests/foo-tests-main.cpp tests/foo-tests.cpp)
-  target_link_libraries(foo-tests PRIVATE foo)
   target_include_directories(foo-tests PRIVATE tests)
+  if (_CODE_COVERAGE)
+    target_link_libraries(foo-tests PRIVATE foo-coverage)
+  else()
+    target_link_libraries(foo-tests PRIVATE foo)
+  endif()
   add_test(NAME foo-tests COMMAND foo-tests)
 
   # Python tests for bindings
-  if (BUILD_PYTHON_BINDINGS)
+  if(BUILD_PYTHON_BINDINGS)
     add_test(
       NAME foo-python-tests
       COMMAND ${PYTHON_EXECUTABLE} setup.py pytest
@@ -140,7 +166,7 @@ if(BUILD_DOCUMENTATION)
       ${CMAKE_CURRENT_BINARY_DIR}/docs/html/index.html)
 
   # Sphinx documentation of Python bindings
-  if (BUILD_PYTHON_BINDINGS)
+  if(BUILD_PYTHON_BINDINGS)
     add_custom_command(
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docs/python/html/index.html
       COMMAND ${PYTHON_EXECUTABLE}
@@ -208,7 +234,7 @@ export(
 export(PACKAGE foo)
 
 # Python bindings
-if (BUILD_PYTHON_BINDINGS)
+if(BUILD_PYTHON_BINDINGS)
   install(CODE
     "execute_process(
       COMMAND

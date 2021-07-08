@@ -38,6 +38,14 @@ addons:
       - python3-sphinx
 
 script:
-  - cmake -DBUILD_DOCUMENTATION=ON -DBUILD_PYTHON_BINDINGS=ON -DBUILD_TESTING=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.8 .
+  - cmake -DBUILD_DOCUMENTATION=ON -DBUILD_PYTHON_BINDINGS=ON -DBUILD_TESTING=ON -DCODE_COVERAGE=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.8 .
   - cmake --build .
   - ctest .
+
+after_success:
+  - lcov --capture --directory . --output-file code.coverage
+  - lcov --remove code.coverage '/usr/*' --output-file code.coverage
+  - lcov --remove code.coverage '**/tests/*' --output-file code.coverage
+  - lcov --remove code.coverage '**/catch.hpp' --output-file code.coverage
+  - lcov --list code.coverage
+  - bash <(curl -s https://codecov.io/bash) -f code.coverage

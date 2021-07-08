@@ -1,5 +1,11 @@
 # Example: Building C library with Cython Wrapper using CMake
 
+![GitHub](https://img.shields.io/github/license/kmhsonnenkind/cmake-cython-example)
+![Travis (.com)](https://img.shields.io/travis/com/kmhsonnenkind/cmake-cython-example)
+![Codecov](https://img.shields.io/codecov/c/gh/kmhsonnenkind/cmake-cython-example)
+
+## About
+
 This repository shows how to use [cmake](https://cmake.org/) to build a native `C` or `C++` library and (optionally) add a reusable [Python 3](https://www.python.org) wrapper on top using [cython](https://cython.org).
 
 
@@ -17,23 +23,29 @@ For the `Python` bindings you will need to install a [CPython interpreter](https
 
 On top of that you will need to install `cython` to transpile the provided `.pyx` files to `c++` and have them compiled for use in `Python`. For the Python tests you will need to install [pytest](https://docs.pytest.org). By default Python's build script will check if the requirements are installed and if not install them on the fly.
 
+If you want to further get test coverage information for the native tests you will also need [lcov](https://github.com/linux-test-project/lcov).
+
 Finally if you also want to build the API documentation you will need [doxygen](https://www.doxygen.nl/) for the native library as well as [sphinx](https://www.sphinx-doc.org/) for the Python bindings.
 
 On `Debian` based systems you can install the required packages using:
 
 ```sh
 sudo apt-get update
+# Install required dependencies
 sudo apt-get install build-essential \
                      cmake \
                      gcc \
-                     g++ \
-                     python3 \
+                     g++
+
+# Install optional dependencies
+sudo apt-get install python3 \
                      python3-dev \
                      cython3 \
                      python3-pytest \
                      python3-pytest-runner \
                      doxygen \
-                     python3-sphinx
+                     python3-sphinx \
+                     lcov
 ```
 
 Otherwise all tools should also provide installers for your targeted operating system. Just follow the instructions on the tools' sites.
@@ -74,6 +86,27 @@ ctest .
 The tests for the native library are using [catch2](https://github.com/catchorg/Catch2) (provided in *tests/catch2*). The source code for the tests can be found in *tests*.
 
 The Python bindings use [pytest](https://docs.pytest.org). The code can be found in *extras/python-bindings/tests*.
+
+##### Coverage
+
+If you want to to get detailed information about the code coverage of the native test cases you can turn on the `cmake` configuration option `CODE_COVERAGE` (`OFF` by default). This option is only available if `BUILD_TESTING` is also enabled.
+
+You can then use [lcov](https://github.com/linux-test-project/lcov) to get detailed information.
+
+```sh
+# Build and run tests
+cmake -DBUILD_TESTING=ON -DCODE_COVERAGE=ON ..
+cmake --build .
+ctest .
+
+# Get code coverage
+lcov --capture --directory . --output-file code.coverage
+lcov --remove code.coverage '/usr/*' --output-file code.coverage
+lcov --remove code.coverage '**/tests/*' --output-file code.coverage
+lcov --remove code.coverage '**/catch.hpp' --output-file code.coverage
+lcov --list code.coverage
+```
+
 
 #### Documentation
 

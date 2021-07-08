@@ -60,3 +60,4 @@ Doxyfile
 docs/html
 docs/*.tag
 *.stamp
+*.coverage

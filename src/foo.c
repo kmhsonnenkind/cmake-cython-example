@@ -56,7 +56,7 @@ int foo_initialize(Foo *self, int baz)
     self->_baz = malloc(sizeof(int));
     if (self->_baz == NULL)
     {
-        return ENOMEM;
+        return ENOMEM; // LCOV_EXCL_LINE
     }
     *self->_baz = baz;
     return 0;

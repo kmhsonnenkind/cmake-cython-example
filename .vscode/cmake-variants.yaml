@@ -28,16 +28,23 @@ python:
 tests:
   default: tests
   choices:
-    tests:
-      short: w/ tests
-      long: Build unittests using catch2 (and optionally pytest)
-      settings:
-        BUILD_TESTING: ON
     no-tests:
       short: wo/ tests
       long: Do not build unittests
       settings:
         BUILD_TESTING: OFF
+    tests:
+      short: w/ tests
+      long: Build unittests using catch2 (and optionally pytest)
+      settings:
+        BUILD_TESTING: ON
+        CODE_COVERAGE: OFF
+    coverage:
+      short: w/ coverage tests
+      long: Build unittests using catch2 (and optionally pytest) and measure code coverage
+      settings:
+        BUILD_TESTING: ON
+        CODE_COVERAGE: ON
 
 documentation:
   default: no-documentation
