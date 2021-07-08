@@ -36,6 +36,7 @@ addons:
       - doxygen
       - graphviz
       - python3-sphinx
+      - lcov
 
 script:
   - cmake -DBUILD_DOCUMENTATION=ON -DBUILD_PYTHON_BINDINGS=ON -DBUILD_TESTING=ON -DCODE_COVERAGE=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.8 .
