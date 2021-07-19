@@ -89,6 +89,7 @@ if(BUILD_PYTHON_BINDINGS)
 [build_ext]
 library_dirs=$<TARGET_FILE_DIR:foo>
 include_dirs=$<JOIN:$<TARGET_PROPERTY:foo,INCLUDE_DIRECTORIES>,:>
+define=$<IF:$<BOOL:${CODE_COVERAGE}>,CYTHON_TRACE,>
 
 [build_sphinx]
 build_dir=${CMAKE_CURRENT_BINARY_DIR}/docs/python
@@ -130,10 +131,19 @@ if(BUILD_TESTING)
 
   # Python tests for bindings
   if(BUILD_PYTHON_BINDINGS)
-    add_test(
-      NAME foo-python-tests
-      COMMAND ${PYTHON_EXECUTABLE} setup.py pytest
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)
+    # Run with coverage module to produce coverage results
+    if(CODE_COVERAGE)
+      add_test(
+        NAME foo-python-tests
+        COMMAND ${PYTHON_EXECUTABLE} -m coverage run setup.py pytest
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)
+    # Run in standard mode
+    else()
+      add_test(
+        NAME foo-python-tests
+        COMMAND ${PYTHON_EXECUTABLE} setup.py pytest
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)
+    endif()
   endif()
 endif()
 

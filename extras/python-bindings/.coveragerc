@@ -1,0 +1,10 @@
+[run]
+plugins = Cython.Coverage
+source =
+    src
+omit =
+    *__init__*
+    *_test.py*
+    setup.py
+    */dist-packages/*
+    */site-packages/*

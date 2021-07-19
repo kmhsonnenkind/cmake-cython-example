@@ -30,7 +30,7 @@ import foo
 
 
 #: Maximum value for signed integer in cython
-CYTHON_INT_MAX = 0x7fffffff
+CYTHON_INT_MAX: int = 0x7fffffff
 
 
 def test_foo_init_no_param():
@@ -52,7 +52,7 @@ def test_foo_init():
 
 def test_foo_init_bar_negative():
     '''
-    Tests that constructor raises exception when baz is negative.
+    Tests that constructor raises exception when parameter `baz` is negative.
     '''
     with pytest.raises(ValueError):
         foo.Foo(-1)

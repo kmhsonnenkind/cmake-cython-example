@@ -33,6 +33,7 @@ addons:
       - cython3
       - python3-pytest
       - python3-pytest-runner
+      - python3-coverage
       - doxygen
       - graphviz
       - python3-sphinx
@@ -50,3 +51,5 @@ after_success:
   - lcov --remove code.coverage '**/catch.hpp' --output-file code.coverage
   - lcov --list code.coverage
   - bash <(curl -s https://codecov.io/bash) -f code.coverage
+  - /usr/bin/python3.8 extras/python-bindings/util/coverage-report.py
+  - bash <(curl -s https://codecov.io/bash) -f coverage.xml

@@ -63,7 +63,8 @@ setuptools.setup(
     packages=['foo'],
     ext_modules=cythonize(
         foo_extension,
-        language_level=3.6
+        language_level=3.6,
+        compiler_directives={"linetrace": True} # Opt-in via CYTHON_TRACE macro
     ),
     package_dir={'': 'src'},
     package_data={

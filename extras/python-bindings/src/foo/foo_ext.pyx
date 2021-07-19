@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 '''
-Actual implementation for wrapper class `Foo` wrapping native `Foo` struct.
+Actual implementation for wrapper class :class:`Foo` wrapping native `Foo` struct.
 '''
 
 __all__ = ['Foo']
@@ -43,8 +43,8 @@ cdef class Foo:
         cdef int result = c_foo.foo_initialize(&self._native, baz)
 
         if result == EINVAL:
-            raise ValueError("parameter 'baz' must not be negative")
-        elif result == ENOMEM:
+            raise ValueError('parameter \'baz\' must not be negative')
+        elif result == ENOMEM: # pragma: no cover
             raise MemoryError()
 
     def __dealloc__(self):
@@ -62,10 +62,10 @@ cdef class Foo:
         cdef int result = c_foo.foo_foob(&self._native)
 
         if result == ERANGE:
-            raise OverflowError("could not foob the Foo's baz")
-        elif result == EINVAL:
+            raise OverflowError('could not foob the Foo\'s baz')
+        elif result == EINVAL: # pragma: no cover
             # Should not occur
-            raise RuntimeError("error occurred in native library")
+            raise RuntimeError('error occurred in native library')
 
     @property
     def baz(self):
@@ -76,8 +76,8 @@ cdef class Foo:
         cdef int baz = 0
         cdef int result = c_foo.foo_get_baz(&self._native, &baz)
 
-        if result == EINVAL:
+        if result == EINVAL: # pragma: no cover
             # Should not occur
-            raise RuntimeError("error occurred in native library")
+            raise RuntimeError('error occurred in native library')
 
         return baz

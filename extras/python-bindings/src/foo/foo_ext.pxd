@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 '''
-Cython definitions for wrapper class `Foo` wrapping native `Foo` struct.
+Cython definitions for wrapper class :class:`Foo` wrapping native `Foo` struct.
 '''
 
 __all__ = ['Foo']
