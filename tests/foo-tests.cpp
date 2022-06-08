@@ -33,7 +33,7 @@
 #include "foo.h"
 
 /**
- * \test Tests that foo_initialize() correctly sets Foo's baz.
+ * \test Tests that foo_initialize() correctly sets the Foo's baz.
  */
 TEST_CASE("foo_initialize()", "[foo_initialize]")
 {
@@ -50,16 +50,16 @@ TEST_CASE("foo_initialize()", "[foo_initialize]")
 /**
  * \test Tests that foo_initialize() correctly detects illegal \c NULL argument.
  */
-TEST_CASE("foo_initialize(): self NULL", "[foo_initialize, error]")
+TEST_CASE("foo_initialize(): self NULL", "[foo_initialize][error]")
 {
     REQUIRE(foo_initialize(NULL, 42) == EINVAL);
 }
 
 /**
  * \test Tests that foo_initialize() correctly detects illegal negative initial
- * baz value.
+ *       baz value.
  */
-TEST_CASE("foo_initialize(): baz negative", "[foo_initialize, error]")
+TEST_CASE("foo_initialize(): baz negative", "[foo_initialize][error]")
 {
     Foo foo = {NULL};
     REQUIRE(foo_initialize(&foo, -1) == EINVAL);
@@ -67,7 +67,7 @@ TEST_CASE("foo_initialize(): baz negative", "[foo_initialize, error]")
 }
 
 /**
- * \test Tests that foo_get_baz() correctly returns Foo's baz.
+ * \test Tests that foo_get_baz() correctly returns the Foo's baz.
  */
 TEST_CASE("foo_get_baz()", "[foo_get_baz]")
 {
@@ -84,7 +84,7 @@ TEST_CASE("foo_get_baz()", "[foo_get_baz]")
 /**
  * \test Tests that foo_get_baz() correctly detects illegal \c NULL argument.
  */
-TEST_CASE("foo_get_baz(): self NULL", "[foo_get_baz, error]")
+TEST_CASE("foo_get_baz(): self NULL", "[foo_get_baz][error]")
 {
     int baz = 0;
     REQUIRE(foo_get_baz(NULL, &baz) == EINVAL);
@@ -93,7 +93,7 @@ TEST_CASE("foo_get_baz(): self NULL", "[foo_get_baz, error]")
 /**
  * \test Tests that foo_get_baz() correctly detects illegal \c NULL argument.
  */
-TEST_CASE("foo_get_baz(): baz_buffer NULL", "[foo_get_baz, error]")
+TEST_CASE("foo_get_baz(): baz_buffer NULL", "[foo_get_baz][error]")
 {
     Foo foo;
     REQUIRE(foo_initialize(&foo, 0) == 0);
@@ -105,9 +105,9 @@ TEST_CASE("foo_get_baz(): baz_buffer NULL", "[foo_get_baz, error]")
 
 /**
  * \test Tests that foo_get_baz() correctly detects illegal uninitialized
- * argument.
+ *       argument.
  */
-TEST_CASE("foo_get_baz(): self not initialized", "[foo_get_baz, error]")
+TEST_CASE("foo_get_baz(): self not initialized", "[foo_get_baz][error]")
 {
     Foo foo = {NULL};
     int baz = 0;
@@ -137,16 +137,16 @@ TEST_CASE("foo_foob()", "[foo_foob]")
 /**
  * \test Tests that foo_foob() correctly detects illegal \c NULL argument.
  */
-TEST_CASE("foo_foob(): self NULL", "[foo_foob, error]")
+TEST_CASE("foo_foob(): self NULL", "[foo_foob][error]")
 {
     REQUIRE(foo_foob(NULL) == EINVAL);
 }
 
 /**
  * \test Tests that foo_foob() correctly detects illegal uninitialized
- * argument.
+ *       argument.
  */
-TEST_CASE("foo_foob(): self not initialized", "[foo_foob, error]")
+TEST_CASE("foo_foob(): self not initialized", "[foo_foob][error]")
 {
     Foo foo = {NULL};
 
@@ -156,7 +156,7 @@ TEST_CASE("foo_foob(): self not initialized", "[foo_foob, error]")
 /**
  * \test Tests that foo_foob() correctly detects int overflows.
  */
-TEST_CASE("foo_foob(): integer overflow", "[foo_foob, error]")
+TEST_CASE("foo_foob(): integer overflow", "[foo_foob][error]")
 {
     Foo foo;
     REQUIRE(foo_initialize(&foo, INT_MAX) == 0);
@@ -171,7 +171,7 @@ TEST_CASE("foo_foob(): integer overflow", "[foo_foob, error]")
 }
 
 /**
- * \test Tests that foo_destroy() correctly cleans up Foo.
+ * \test Tests that foo_destroy() correctly cleans up the Foo.
  */
 TEST_CASE("foo_destroy()", "[foo_destroy]")
 {
@@ -203,7 +203,7 @@ TEST_CASE("foo_destroy(): self not initialized", "[foo_destroy]")
 /**
  * \test Tests that foo_destroy() correctly detects illegal \c NULL argument.
  */
-TEST_CASE("foo_destroy(): self NULL", "[foo_destroy, error]")
+TEST_CASE("foo_destroy(): self NULL", "[foo_destroy][error]")
 {
     REQUIRE(foo_destroy(NULL) == EINVAL);
 }

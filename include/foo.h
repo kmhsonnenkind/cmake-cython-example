@@ -48,7 +48,7 @@ typedef struct
      * \brief Private member for the Foo's baz.
      *
      * \details Manipulated internally, do **NOT** set manually! Use
-     * foo_get_baz() to get value.
+     *          foo_get_baz() to get value.
      *
      * \see foo_get_baz()
      */
@@ -64,6 +64,7 @@ typedef struct
  * \retval 0 success.
  * \retval EINVAL if \p self is \c NULL or \p baz is negative.
  * \retval ENOMEM if not enough memory available.
+ * \relates Foo
  */
 int foo_initialize(Foo *self, int baz);
 
@@ -74,8 +75,9 @@ int foo_initialize(Foo *self, int baz);
  * \return int \c 0 if successful.
  * \retval 0 success.
  * \retval EINVAL if \p self is \c NULL or uninitialized (foo_initialize()
- * not called or foo_destroy() called). called before.
+ *         not called or foo_destroy() called).
  * \retval ERANGE if foob'd baz would cause integer overflow.
+ * \relates Foo
  */
 int foo_foob(Foo *self);
 
@@ -87,22 +89,24 @@ int foo_foob(Foo *self);
  * \return int \c 0 if successful.
  * \retval 0 success.
  * \retval EINVAL if \p self is \c NULL or unitintialized or \p baz_buffer
- * is \c NULL.
+ *         is \c NULL.
+ * \relates Foo
  */
 int foo_get_baz(Foo *self, int *baz_buffer);
 
 /**
  * \brief Frees resources associated with Foo object (but not the object
- * itself).
+ *        itself).
  *
  * \details Foo objects initialized with foo_initialize() might have members
- * set that need explicit cleanup. Calling this function will ensure all
- * data has been freed and all locks released.
+ *          set that need explicit cleanup. Calling this function will ensure
+ *          all data has been freed and all locks released.
  *
  * \param[in] self Foo object to be destroyed.
  * \return int \c 0 if successful.
  * \retval 0 success.
  * \retval EINVAL if \p self is \c NULL.
+ * \relates Foo
  */
 int foo_destroy(Foo *self);
 

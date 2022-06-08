@@ -64,7 +64,10 @@ endif()
 ################################################################################
 # Native C implementation
 if("${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_NATIVE}")
-  add_library(foo include/foo.h src/native/foo_impl.c)
+  add_library(foo
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/foo.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/native/foo_impl.c
+  )
   add_library(kmhsonnenkind::foo ALIAS foo)
   target_include_directories(foo
     PUBLIC
@@ -74,11 +77,15 @@ if("${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_NATIVE}")
 
   # Special version of C library for measuring code coverage
   if(_CODE_COVERAGE)
-    add_library(foo-coverage include/foo.h src/native/foo_impl.c)
+    add_library(foo-coverage
+      ${CMAKE_CURRENT_SOURCE_DIR}/include/foo.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/native/foo_impl.c
+    )
     target_include_directories(foo-coverage
       PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
+        $<INSTALL_INTERFACE:include>
+    )
     target_compile_options(foo-coverage PUBLIC -O0 -g --coverage -fPIC)
     if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
       target_link_options(foo-coverage PUBLIC --coverage)
@@ -164,12 +171,14 @@ if(BUILD_TESTING)
   # Download Catch2
   include(${CMAKE_CURRENT_SOURCE_DIR}/.cmake/CPM.cmake)
   CPMAddPackage("gh:catchorg/Catch2@2.13.9")
-  list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/contrib")
+  list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/contrib)
   include(Catch)
 
   # Catch2 tests for native C library
-  add_executable(foo-tests tests/foo-tests-main.cpp tests/foo-tests.cpp)
-  target_include_directories(foo-tests PRIVATE tests)
+  add_executable(foo-tests
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/foo-tests-main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/foo-tests.cpp
+  )
   target_link_libraries(foo-tests PRIVATE Catch2::Catch2)
   if (_CODE_COVERAGE)
     target_link_libraries(foo-tests PRIVATE foo-coverage)
@@ -185,13 +194,15 @@ if(BUILD_TESTING)
       add_test(
         NAME foo-python-tests
         COMMAND ${PYTHON_EXECUTABLE} -m coverage run setup.py pytest
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
+      )
     # Run in standard mode
     else()
       add_test(
         NAME foo-python-tests
         COMMAND ${PYTHON_EXECUTABLE} setup.py pytest
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
+      )
     endif()
   endif()
 endif()
@@ -229,9 +240,7 @@ if(BUILD_DOCUMENTATION)
   if(BUILD_PYTHON_BINDINGS)
     add_custom_command(
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docs/python/html/index.html
-      COMMAND ${PYTHON_EXECUTABLE}
-        setup.py
-          build_sphinx
+      COMMAND ${PYTHON_EXECUTABLE} setup.py build_sphinx
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
       DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings/README.md
@@ -297,9 +306,7 @@ export(PACKAGE foo)
 if(BUILD_PYTHON_BINDINGS)
   install(CODE
     "execute_process(
-      COMMAND
-        ${PYTHON_EXECUTABLE}
-          setup.py
-            install
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)")
+      COMMAND ${PYTHON_EXECUTABLE} setup.py install
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)"
+  )
 endif()

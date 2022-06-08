@@ -26,7 +26,7 @@
  * \file foo-tests-main.cpp
  * \author Martin Kloesch <martin@gmail.com>
  * \brief Main entry point for all *foo* library tests to increase compilation
- * speed of rebuilds (no need to recompile catch2)
+ *        speed of rebuilds (no need to recompile catch2).
  */
 #define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
