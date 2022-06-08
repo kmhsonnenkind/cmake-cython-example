@@ -27,23 +27,32 @@ cmake_minimum_required(VERSION 3.12)
 
 # Main project configuration
 project(foo
-  VERSION 0.0.1
+  VERSION 0.0.2
   DESCRIPTION "Library for foob'ing the Foo's baz"
   HOMEPAGE_URL "https://github.com/kmhsonnenkind/cmake-cython-example"
   LANGUAGES C CXX)
 
 # Build options
+set(_IMPLEMENTATION_NATIVE "native")
+set(_IMPLEMENTATION_PYTHON "python")
+set(_IMPLEMENTATIONS ${_IMPLEMENTATION_NATIVE} ${_IMPLEMENTATION_PYTHON})
+set(IMPLEMENTATION ${_IMPLEMENTATION_NATIVE} CACHE STRING "library implementation to use (must be one of: ${_IMPLEMENTATIONS})")
+set_property(CACHE IMPLEMENTATION PROPERTY STRINGS ${_IMPLEMENTATIONS})
 option(BUILD_PYTHON_BINDINGS "Build Python bindings using cython" ON)
 option(BUILD_DOCUMENTATION "Build API documentation using doxygen (and optionally sphinx)" OFF)
 include(CMakeDependentOption)
-CMAKE_DEPENDENT_OPTION(CODE_COVERAGE "Measure code coverage information" OFF "BUILD_TESTING" OFF)
+CMAKE_DEPENDENT_OPTION(CODE_COVERAGE "Measure code coverage information (only available if using GNU/Clang and native library implementation)" OFF "BUILD_TESTING" OFF)
 
 # Compiler settings
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 
-# Internal variables
-if(BUILD_TESTING AND CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+# Build configuration validation and internal variables
+string(TOLOWER "${IMPLEMENTATION}" _IMPLEMENTATION)
+if(NOT (${_IMPLEMENTATION} IN_LIST _IMPLEMENTATIONS))
+  message(FATAL_ERROR "Unknown library implementation ${IMPLEMENTATION} (must be empty or one of: ${_IMPLEMENTATIONS})")
+endif()
+if(BUILD_TESTING AND CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND "${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_NATIVE}")
   set(_CODE_COVERAGE 1)
 else()
   set(_CODE_COVERAGE 0)
@@ -53,27 +62,60 @@ endif()
 ################################################################################
 # Libraries
 ################################################################################
-# Main C library
-add_library(foo include/foo.h src/foo.c)
-add_library(kmhsonnenkind::foo ALIAS foo)
-target_include_directories(foo
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
-
-# Special version of C library for measuring code coverage
-if(_CODE_COVERAGE)
-  add_library(foo-coverage include/foo.h src/foo.c)
-  target_include_directories(foo-coverage
+# Native C implementation
+if("${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_NATIVE}")
+  add_library(foo include/foo.h src/native/foo_impl.c)
+  add_library(kmhsonnenkind::foo ALIAS foo)
+  target_include_directories(foo
     PUBLIC
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-      $<INSTALL_INTERFACE:include>)
-  target_compile_options(foo-coverage PUBLIC -O0 -g --coverage -fPIC)
-  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-    target_link_options(foo-coverage PUBLIC --coverage)
-  else()
-    target_link_libraries(foo-coverage PUBLIC --coverage)
+      $<INSTALL_INTERFACE:include>
+  )
+
+  # Special version of C library for measuring code coverage
+  if(_CODE_COVERAGE)
+    add_library(foo-coverage include/foo.h src/native/foo_impl.c)
+    target_include_directories(foo-coverage
+      PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>)
+    target_compile_options(foo-coverage PUBLIC -O0 -g --coverage -fPIC)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+      target_link_options(foo-coverage PUBLIC --coverage)
+    else()
+      target_link_libraries(foo-coverage PUBLIC --coverage)
+    endif()
   endif()
+
+# Python implementation
+elseif("${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_PYTHON}")
+  find_package(PythonInterp 3.6 REQUIRED)
+  find_package(PythonLibs 3.6 REQUIRED)
+
+  add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.c ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.h
+    COMMAND ${PYTHON_EXECUTABLE} -m cython ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.pyx
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/python
+    DEPENDS
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.pyx
+      ${CMAKE_CURRENT_SOURCE_DIR}/include/foo.h
+  )
+  add_library(foo
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.h
+  )
+  add_library(kmhsonnenkind::foo ALIAS foo)
+  set_target_properties(foo PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  target_link_libraries(foo PUBLIC ${PYTHON_LIBRARY})
+  target_include_directories(foo
+    PUBLIC
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>
+    PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/python
+      ${PYTHON_INCLUDE_DIR}
+  )
 endif()
 
 # Python bindings
@@ -174,6 +216,7 @@ if(BUILD_DOCUMENTATION)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS
       ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/python/README.md
       ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
       ${CMAKE_CURRENT_SOURCE_DIR}/data/Doxyfile.in
       foo

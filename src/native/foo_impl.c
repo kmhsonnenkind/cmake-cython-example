@@ -23,7 +23,7 @@
  */
 
 /**
- * \file foo.c
+ * \file foo_impl.c
  * \author Martin Kloesch <martin@gmail.com>
  * \brief Foo library foob'ing the Foo's baz.
  */

@@ -8,6 +8,8 @@
 
 This repository shows how to use [cmake](https://cmake.org/) to build a native `C` or `C++` library and (optionally) add a reusable [Python 3](https://www.python.org) wrapper on top using [cython](https://cython.org).
 
+It further shows how to use `cython` to implement a `C` interface (definition from `.h` file).
+
 
 ## Build and Run the Code
 
@@ -19,9 +21,9 @@ As the build uses `cmake` first off you will need [cmake](https://cmake.org/) (*
 
 Additionally you will need a `C` compiler supporting at least `C99` as well as a `C++` compiler supporting at least `C++11`. The build should work on any compiler but was tested with `gcc`, `clang` and `msbuild`.
 
-For the `Python` bindings you will need to install a [CPython interpreter](https://www.python.org) supporting at least language level `3.6` alongside its dev tools.
+For both the `Python` implementation as well as the bindings you will need to install a [CPython interpreter](https://www.python.org) supporting at least language level `3.6` alongside its dev tools.
 
-On top of that you will need to install `cython` to transpile the provided `.pyx` files to `c++` and have them compiled for use in `Python`. For the Python tests you will need to install [pytest](https://docs.pytest.org). By default Python's build script will check if the requirements are installed and if not install them on the fly.
+On top of that you will need to install `cython` to transpile the provided `.pyx` files to `c++` and have them compiled for use in either native code or `Python`. For the Python tests you will need to install [pytest](https://docs.pytest.org). By default Python's build script will check if the requirements are installed and if not install them on the fly.
 
 If you want to further get test coverage information for the native tests you will also need [lcov](https://github.com/linux-test-project/lcov).
 
@@ -60,6 +62,22 @@ cmake --build .
 ```
 
 It offers several configuration parameters described in the following sections. For your convenience a [cmake variants](https://vector-of-bool.github.io/docs/vscode-cmake-tools/variants.html) file is provided that lets you choose the desired target configuration.
+
+#### Library Implementation
+
+The library's [C API](include/foo.h) offers two different implementations:
+
+* The [native](src/native/foo_impl.c) implementation is written in pure `C`.
+  This matches the typical scenario when trying to consume a native library from `Python`.
+* The [python](src/python/) implementation is written in `Cython`.
+  Have a look at this implementation if you want to consume `Python` functionality in your native `C` or `C++` applications.
+
+You can choose which version to build by setting the `IMPLEMENTATION` cmake parameter to either `native` or `python` (default: `native`).
+
+```sh
+cmake -DIMPLEMENTATION=python ..
+cmake --build .
+```
 
 #### Python Bindings
 

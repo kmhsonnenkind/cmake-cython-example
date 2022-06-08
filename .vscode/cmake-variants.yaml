@@ -11,6 +11,20 @@ buildType:
             long: Build without debug information and optimization enabled
             buildType: Release
 
+implementation:
+  default: native
+  choices:
+    native:
+      short: native implementation
+      long: Use native C library implementation
+      settings:
+        IMPLEMENTATION: native
+    python:
+      short: python implementation
+      long: Use Python based C library implementation
+      settings:
+        IMPLEMENTATION: python
+
 python:
   default: python
   choices:

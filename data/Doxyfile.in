@@ -84,7 +84,7 @@ WARN_AS_ERROR          = YES
 # directories like /usr/src/myproject. Separate the files or directories with
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
-INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@/README.md" "@CMAKE_CURRENT_SOURCE_DIR@/include"
+INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@/README.md" "@CMAKE_CURRENT_SOURCE_DIR@/include" "@CMAKE_CURRENT_SOURCE_DIR@/src/python/README.md"
 
 # If the USE_MDFILE_AS_MAINPAGE tag refers to the name of a markdown file that
 # is part of the input, its contents will be placed on the main page
