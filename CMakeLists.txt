@@ -119,15 +119,22 @@ endif()
 ################################################################################
 include(CTest)
 if(BUILD_TESTING)
+  # Download Catch2
+  include(${CMAKE_CURRENT_SOURCE_DIR}/.cmake/CPM.cmake)
+  CPMAddPackage("gh:catchorg/Catch2@2.13.9")
+  list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/contrib")
+  include(Catch)
+
   # Catch2 tests for native C library
   add_executable(foo-tests tests/foo-tests-main.cpp tests/foo-tests.cpp)
   target_include_directories(foo-tests PRIVATE tests)
+  target_link_libraries(foo-tests PRIVATE Catch2::Catch2)
   if (_CODE_COVERAGE)
     target_link_libraries(foo-tests PRIVATE foo-coverage)
   else()
     target_link_libraries(foo-tests PRIVATE foo)
   endif()
-  add_test(NAME foo-tests COMMAND foo-tests)
+  catch_discover_tests(foo-tests)
 
   # Python tests for bindings
   if(BUILD_PYTHON_BINDINGS)
