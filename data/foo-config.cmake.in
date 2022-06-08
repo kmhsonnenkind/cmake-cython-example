@@ -24,6 +24,11 @@
 
 get_filename_component(foo_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
+if("@_IMPLEMENTATION@" STREQUAL "@_IMPLEMENTATION_PYTHON@")
+  include(CMakeFindDependencyMacro)
+  find_dependency(Python3 REQUIRED COMPONENTS Development)
+endif()
+
 if(NOT TARGET kmhsonnenkind::foo AND NOT foo_BINARY_DIR)
   include("${foo_CMAKE_DIR}/foo-targets.cmake")
 endif()

@@ -40,7 +40,7 @@ addons:
       - lcov
 
 script:
-  - cmake -DBUILD_DOCUMENTATION=ON -DBUILD_PYTHON_BINDINGS=ON -DBUILD_TESTING=ON -DCODE_COVERAGE=ON -DPYTHON_EXECUTABLE=/usr/bin/python3.8 .
+  - cmake -DBUILD_DOCUMENTATION=ON -DBUILD_PYTHON_BINDINGS=ON -DBUILD_TESTING=ON -DCODE_COVERAGE=ON -DPython3_EXECUTABLE=/usr/bin/python3.8 .
   - cmake --build .
   - ctest .
 

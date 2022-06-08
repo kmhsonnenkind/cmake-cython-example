@@ -96,12 +96,11 @@ if("${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_NATIVE}")
 
 # Python implementation
 elseif("${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_PYTHON}")
-  find_package(PythonInterp 3.6 REQUIRED)
-  find_package(PythonLibs 3.6 REQUIRED)
+  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.c ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.h
-    COMMAND ${PYTHON_EXECUTABLE} -m cython ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.pyx
+    COMMAND ${Python3_EXECUTABLE} -m cython ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.pyx
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/python
     DEPENDS
       ${CMAKE_CURRENT_SOURCE_DIR}/src/python/foo_impl.pyx
@@ -114,21 +113,19 @@ elseif("${_IMPLEMENTATION}" STREQUAL "${_IMPLEMENTATION_PYTHON}")
   )
   add_library(kmhsonnenkind::foo ALIAS foo)
   set_target_properties(foo PROPERTIES POSITION_INDEPENDENT_CODE ON)
-  target_link_libraries(foo PUBLIC ${PYTHON_LIBRARY})
+  target_link_libraries(foo PUBLIC Python3::Python)
   target_include_directories(foo
     PUBLIC
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
       $<INSTALL_INTERFACE:include>
     PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src/python
-      ${PYTHON_INCLUDE_DIR}
   )
 endif()
 
 # Python bindings
 if(BUILD_PYTHON_BINDINGS)
-  find_package(PythonInterp 3.6 REQUIRED)
-  find_package(PythonLibs 3.6 REQUIRED)
+  find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
   # Prepare Python's setup.cfg
   file(GENERATE
@@ -146,7 +143,7 @@ build_dir=${CMAKE_CURRENT_BINARY_DIR}/docs/python
 
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/python.stamp
-    COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext
+    COMMAND ${Python3_EXECUTABLE} setup.py build_ext
     COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/python.stamp
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
     DEPENDS
@@ -193,14 +190,14 @@ if(BUILD_TESTING)
     if(CODE_COVERAGE)
       add_test(
         NAME foo-python-tests
-        COMMAND ${PYTHON_EXECUTABLE} -m coverage run setup.py pytest
+        COMMAND ${Python3_EXECUTABLE} -m coverage run setup.py pytest
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
       )
     # Run in standard mode
     else()
       add_test(
         NAME foo-python-tests
-        COMMAND ${PYTHON_EXECUTABLE} setup.py pytest
+        COMMAND ${Python3_EXECUTABLE} setup.py pytest
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
       )
     endif()
@@ -240,7 +237,7 @@ if(BUILD_DOCUMENTATION)
   if(BUILD_PYTHON_BINDINGS)
     add_custom_command(
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docs/python/html/index.html
-      COMMAND ${PYTHON_EXECUTABLE} setup.py build_sphinx
+      COMMAND ${Python3_EXECUTABLE} setup.py build_sphinx
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings
       DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings/README.md
@@ -306,7 +303,7 @@ export(PACKAGE foo)
 if(BUILD_PYTHON_BINDINGS)
   install(CODE
     "execute_process(
-      COMMAND ${PYTHON_EXECUTABLE} setup.py install
+      COMMAND ${Python3_EXECUTABLE} setup.py install
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extras/python-bindings)"
   )
 endif()
